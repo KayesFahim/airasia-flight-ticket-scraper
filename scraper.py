@@ -7,7 +7,6 @@ webdriver = r'/usr/local/bin/chromedriver'
 
 driver = Chrome(executable_path=webdriver)
 
-# URL = 'http://quotes.toscrape.com/js/page/1/'
 URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
 
 driver.get(URL)
@@ -18,11 +17,19 @@ driver.execute_script(
 # sleep for 30s
 time.sleep(10)
 
-price_element = driver.find_element_by_xpath(
-    '//*[@id="lf-low-amount-desc-0-0"]')
+# price_element = driver.find_element_by_class_name('fare-amount')
 
-price = price_element.text
+# price = price_element.text
 
-print(price)
+# print(price)
+
+price_elements = []
+price_wrappper = driver.find_elements_by_class_name('fare-price')
+
+for price in price_wrappper:
+    amount = price.find_element_by_class_name('fare-amount')
+    price_elements.append(amount.text)
+
+print(price_elements)
 
 driver.quit()
