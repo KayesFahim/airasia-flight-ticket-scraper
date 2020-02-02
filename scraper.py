@@ -17,14 +17,9 @@ driver.execute_script(
 # sleep for 30s
 time.sleep(10)
 
-# price_element = driver.find_element_by_class_name('fare-amount')
-
-# price = price_element.text
-
-# print(price)
-
+# ticket price
 price_elements = []
-price_wrappper = driver.find_elements_by_class_name('fare-price')
+price_wrappper = driver.find_elements_by_class_name('section-content')
 
 for price in price_wrappper:
     amount = price.find_element_by_class_name('fare-amount')
