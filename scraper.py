@@ -19,23 +19,24 @@ time.sleep(10)
 
 # ticket price list
 price_elements = []
-price_wrappper = driver.find_elements_by_class_name('section-content')
-
-for price in price_wrappper:
-    amount = price.find_element_by_class_name('fare-amount')
-    price_elements.append(amount.text)
-
-print(f'Ticket price list: {price_elements}')
-
-# departure time list
-count = 0
 departure_time_list = []
-while count < 4:
+departure_time_map_price = {}
+count = 0
+content_wrapper = driver.find_elements_by_class_name('section-content')
+
+for content in content_wrapper:
+    amount = content.find_element_by_class_name('fare-amount')
+    price_elements.append(amount.text)
     departure_time = driver.find_elements_by_id(
         'departing-time-desc-0-'+str(count))
     departure_time_list.append(departure_time[0].text)
     count += 1
+    departure_time_map_price[departure_time[0].text] = amount.text
+
+print(f'Ticket price list: {price_elements}')
 
 print(f'Departure time list: {departure_time_list}')
+
+print(departure_time_map_price)
 
 driver.quit()
