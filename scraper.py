@@ -2,6 +2,8 @@ from selenium.webdriver import Chrome
 import pandas as pd
 from bs4 import BeautifulSoup
 import time
+import csv
+import os
 
 webdriver = r'/usr/local/bin/chromedriver'
 
@@ -33,10 +35,20 @@ for content in content_wrapper:
     count += 1
     departure_time_map_price[departure_time[0].text] = amount.text
 
-print(f'Ticket price list: {price_elements}')
+# print(f'Ticket price list: {price_elements}')
 
-print(f'Departure time list: {departure_time_list}')
+# print(f'Departure time list: {departure_time_list}')
 
 print(departure_time_map_price)
 
 driver.quit()
+
+try:
+    if os.path.isfile('Tickets.csv') is False:
+        map_to_csv = pd.DataFrame.from_dict(
+            departure_time_map_price, orient="index")
+        map_to_csv.to_csv('Tickets.csv')
+    else:  # Todo: append list of price into existing csv file
+
+except Exception as e:
+    raise e
