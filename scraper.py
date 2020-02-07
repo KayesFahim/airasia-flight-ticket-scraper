@@ -33,7 +33,9 @@ for content in content_wrapper:
         'departing-time-desc-0-'+str(count))
     departure_time_list.append(departure_time[0].text)
     count += 1
-    departure_time_map_price[departure_time[0].text] = amount.text
+    empty_list = list()
+    empty_list.append(amount.text)
+    departure_time_map_price[departure_time[0].text] = empty_list
 
 # print(f'Ticket price list: {price_elements}')
 
@@ -46,9 +48,16 @@ driver.quit()
 try:
     if os.path.isfile('Tickets.csv') is False:
         map_to_csv = pd.DataFrame.from_dict(
-            departure_time_map_price, orient="index")
-        map_to_csv.to_csv('Tickets.csv')
-    else:  # Todo: append list of price into existing csv file
-
+            departure_time_map_price)
+        map_to_csv.to_csv('Tickets.csv', index=False)
+    else:
+        departure_time_key = []
+        price_values = []
+        for keys, values in departure_time_map_price.items():
+            departure_time_key.append(keys)
+            price_values.append(values[0])
+        with open('Tickets.csv', 'a+', newline='') as write_obj:
+            dict_writer = csv.writer(write_obj)
+            dict_writer.writerow(price_values)
 except Exception as e:
     raise e
