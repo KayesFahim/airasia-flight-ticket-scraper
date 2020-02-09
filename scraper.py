@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 import csv
 import os
+from datetime import datetime
 
 webdriver = r'/usr/local/bin/chromedriver'
 
@@ -25,6 +26,13 @@ departure_time_list = []
 departure_time_map_price = {}
 count = 0
 content_wrapper = driver.find_elements_by_class_name('section-content')
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+# insert current date time
+empty_date_list = list()
+empty_date_list.append(dt_string)
+departure_time_map_price["Request On"] = empty_date_list
 
 for content in content_wrapper:
     amount = content.find_element_by_class_name('fare-amount')
@@ -34,7 +42,7 @@ for content in content_wrapper:
     departure_time_list.append(departure_time[0].text)
     count += 1
     empty_list = list()
-    empty_list.append(amount.text)
+    empty_list.append("RM: "+amount.text)
     departure_time_map_price[departure_time[0].text] = empty_list
 
 # print(f'Ticket price list: {price_elements}')
