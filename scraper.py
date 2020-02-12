@@ -42,7 +42,7 @@ for content in content_wrapper:
     departure_time_list.append(departure_time[0].text)
     count += 1
     empty_list = list()
-    empty_list.append("RM: "+amount.text)
+    empty_list.append("RM "+amount.text)
     departure_time_map_price[departure_time[0].text] = empty_list
 
 # print(f'Ticket price list: {price_elements}')
