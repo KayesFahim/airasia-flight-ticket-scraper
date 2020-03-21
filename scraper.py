@@ -38,14 +38,33 @@ def write_to_csv(ticket_price_dict):
         raise e
 
 
+def input_request():
+    input_list = []
+
+    departure = input("Departure code: ").upper()
+    input_list.append(departure)
+    destination = input("Destination code: ").upper()
+    input_list.append(destination)
+    departure_date = input("Departure date in Y-M-D format: ")
+    input_list.append(departure_date)
+    return input_list
+
+
 def main():
+
+    input_response = input_request()
+
     webdriver = r'/usr/local/bin/chromedriver'
 
     driver = Chrome(executable_path=webdriver)
 
-    URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
+    # URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
 
-    driver.get(URL)
+    format_url = 'https://www.airasia.com/select/en/gb/' + \
+        input_response[0]+'/'+input_response[1]+'/' + \
+        input_response[2]+'/N/1/0/0/O/N/MYR/ST'
+
+    driver.get(format_url)
 
     # execute script to scroll down the page
     driver.execute_script(
@@ -76,9 +95,12 @@ def main():
 
     driver.quit()
 
-    # print(departure_time_map_price)
+    if not price_elements:
+        print("Requested URL is invalid. Please check.")
+    else:
+        write_to_csv(departure_time_map_price)
 
-    write_to_csv(departure_time_map_price)
+    # print(departure_time_map_price)
 
 
 main()
