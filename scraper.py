@@ -7,6 +7,9 @@ from csv import DictWriter
 import os
 from datetime import datetime
 
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 def get_current_date():
     now = datetime.now()
@@ -78,9 +81,10 @@ def main():
 
     input_response = input_request()
 
-    webdriver = r'/usr/local/bin/chromedriver'
+    # webdriver = r'/usr/local/bin/chromedriver'
+    # driver = Chrome(executable_path=webdriver)
 
-    driver = Chrome(executable_path=webdriver)
+    driver = webdriver.Chrome(ChromeDriverManager().install())
 
     # URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
 
