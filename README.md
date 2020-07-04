@@ -1,3 +1,6 @@
+# Project Intro
+A terminal based program written in Python for web scraping against AirAsia flight tickets (for educational purpose). The result will be output as CSV formatted file.
+
 # Setup
 - Environment setup
 ```
@@ -6,12 +9,12 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import time
 import csv
+from csv import DictWriter
 import os
 from datetime import datetime
-```
-- Install [Drivers](https://pypi.org/project/selenium/), and make sure it’s in your PATH
-```
-webdriver = r'/usr/local/bin/chromedriver'
+
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 ```
 
 ### Reference
