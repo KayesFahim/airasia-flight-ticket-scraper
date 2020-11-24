@@ -92,6 +92,13 @@ def main():
         input_response[0]+'/'+input_response[1]+'/' + \
         input_response[2]+'/N/1/0/0/O/N/MYR/ST'
 
+    convert_date = datetime.strptime(input_response[2], '%Y-%m-%d')
+    current_date = datetime.now()
+
+    if(current_date > convert_date):
+        print('Date is invalid')
+        return
+
     driver.get(format_url)
     # driver.get(URL)
 
