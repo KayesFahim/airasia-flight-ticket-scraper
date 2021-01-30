@@ -6,7 +6,6 @@ import csv
 from csv import DictWriter
 import os
 from datetime import datetime, timedelta
-
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -24,32 +23,32 @@ def get_current_date():
 def write_to_csv(ticket_price_dict):
     departure_time_key = []
     price_values = []
-    fields_name = ['Request On', 'Departure - Destination', 'Date', 'Slot 1',
-                   'Slot 2', 'Slot 3', 'Slot 4', 'Slot 5', 'Slot 6', 'Slot 7', 'Slot 8', 'Slot 9']
+    num_of_slots = 10
+    fields_name = ["Request On", "Departure - Destination", "Departure Date"]
+    file_name = "Tickets.csv"
+
+    for i in range(num_of_slots):
+        fields_name.append("Slot "+str(i+1))
+
     try:
-        if os.path.isfile('Tickets.csv') is False:
+        if os.path.isfile('Tickets.csv') is False:            
             init_set = {
-                "Request On": "",
-                "Departure - Destination": "",
-                "Date": "",
-                "Slot 1": [],
-                "Slot 2": [],
-                "Slot 3": [],
-                "Slot 4": [],
-                "Slot 5": [],
-                "Slot 6": [],
-                "Slot 7": [],
-                "Slot 8": [],
-                "Slot 9": [],
+                fields_name[0]: "",
+                fields_name[1]: "",
+                fields_name[2]: ""
             }
+
+            for i in range(num_of_slots):
+                init_set.update({ "Slot "+str(i+1) : [] })
+
             map_to_csv = pd.DataFrame.from_dict(
                 init_set)
-            map_to_csv.to_csv('Tickets.csv', index=False)
+            map_to_csv.to_csv(file_name, index=False)
 
             for keys, values in ticket_price_dict.items():
                 departure_time_key.append(keys)
                 price_values.append(values[0])
-            with open('Tickets.csv', 'a+', newline='') as write_obj:
+            with open(filename, 'a+', newline='') as write_obj:
                 dict_writer = DictWriter(write_obj, fieldnames=fields_name)
                 dict_writer.writerow(ticket_price_dict)
                 print('CSV file created.')
@@ -57,7 +56,7 @@ def write_to_csv(ticket_price_dict):
             for keys, values in ticket_price_dict.items():
                 departure_time_key.append(keys)
                 price_values.append(values[0])
-            with open('Tickets.csv', 'a+', newline='') as write_obj:
+            with open(filename, 'a+', newline='') as write_obj:
                 dict_writer = DictWriter(write_obj, fieldnames=fields_name)
                 dict_writer.writerow(ticket_price_dict)
                 print('CSV file updated.')
@@ -67,22 +66,35 @@ def write_to_csv(ticket_price_dict):
 
 def input_request():
     input_list = []
+    is_date_valid = False
 
     departure = input("Departure code: ").upper()
     input_list.append(departure)
     destination = input("Destination code: ").upper()
     input_list.append(destination)
-    departure_date = input("Departure date in Y-M-D format: ")
+    while not is_date_valid:
+        departure_date = input("Departure date in Y-M-D format: ")
+        is_date_valid = validate_date(departure_date)
+        if(is_date_valid):
+            break
     input_list.append(departure_date)
     return input_list
 
 
+def validate_date(input_date):
+    convert_date = datetime.strptime(input_date, '%Y-%m-%d')
+    current_date = datetime.now()
+    if(current_date > convert_date):
+        print('Date is invalid. Please try again.')
+        return False
+    else:
+        return True
+
+
 def main():
 
-    input_response = input_request()
-
-    # webdriver = r'/usr/local/bin/chromedriver'
-    # driver = Chrome(executable_path=webdriver)
+    # get input from user
+    input_response = input_request()    
 
     driver = webdriver.Chrome(ChromeDriverManager().install())
 
@@ -92,16 +104,7 @@ def main():
         input_response[0]+'/'+input_response[1]+'/' + \
         input_response[2]+'/N/1/0/0/O/N/MYR/ST'
 
-    convert_date = datetime.strptime(input_response[2], '%Y-%m-%d')
-    current_date = datetime.now()
-    # current_date = current_date + timedelta(days=2)
-
-    if(current_date > convert_date):
-        print('Date is invalid')
-        return
-
     driver.get(format_url)
-    # driver.get(URL)
 
     # execute script to scroll down the page
     driver.execute_script(
@@ -112,17 +115,12 @@ def main():
     # ticket price list
     price_elements = []
     departure_time_list = []
-    departure_time_map_price = {}
-    departure_destination_list = []
-    departure_date_list = []
+    departure_time_map_price = {}    
     count = 0
 
-    departure_time_map_price["Request On"] = get_current_date()
-    departure_destination_list.append(input_response[0] +
-                                      ' - ' + input_response[1])
-    departure_date_list.append(input_response[2])
-    departure_time_map_price["Departure - Destination"] = departure_destination_list[0]
-    departure_time_map_price["Date"] = departure_date_list[0]
+    departure_time_map_price["Request On"] = get_current_date()    
+    departure_time_map_price["Departure - Destination"] = input_response[0] + ' - ' + input_response[1]
+    departure_time_map_price["Departure Date"] = input_response[2]
 
     content_wrapper = driver.find_elements_by_class_name('section-content')
 

@@ -1,24 +1,6 @@
-# Project Intro
+## Project Intro
 
-A terminal based program written in Python for web scraping against AirAsia flight tickets (for educational purpose). The result will be output as CSV formatted file.
-
-# Setup
-
-- Environment setup
-
-```
-from selenium.webdriver import Chrome
-import pandas as pd
-from bs4 import BeautifulSoup
-import time
-import csv
-from csv import DictWriter
-import os
-from datetime import datetime
-
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-```
+A terminal based program written in Python for web scraping against AirAsia flight tickets (for educational purpose). The ticket price will be capture based on the departure code and date, and output the result as CSV.
 
 ## Activating a virtual environment
 
