@@ -5,7 +5,7 @@ import time
 import csv
 from csv import DictWriter
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -94,6 +94,7 @@ def main():
 
     convert_date = datetime.strptime(input_response[2], '%Y-%m-%d')
     current_date = datetime.now()
+    # current_date = current_date + timedelta(days=2)
 
     if(current_date > convert_date):
         print('Date is invalid')
