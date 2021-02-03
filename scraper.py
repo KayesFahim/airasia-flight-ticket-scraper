@@ -56,7 +56,7 @@ def write_to_csv(ticket_price_dict):
             for keys, values in ticket_price_dict.items():
                 departure_time_key.append(keys)
                 price_values.append(values[0])
-            with open(filename, 'a+', newline='') as write_obj:
+            with open(file_name, 'a+', newline='') as write_obj:
                 dict_writer = DictWriter(write_obj, fieldnames=fields_name)
                 dict_writer.writerow(ticket_price_dict)
                 print('CSV file updated.')
@@ -64,21 +64,26 @@ def write_to_csv(ticket_price_dict):
         raise e
 
 
-def input_request():
-    input_list = []
-    is_date_valid = False
+def input_request():    
+    return_list = []    
 
-    departure = input("Departure code: ").upper()
-    input_list.append(departure)
-    destination = input("Destination code: ").upper()
-    input_list.append(destination)
-    while not is_date_valid:
-        departure_date = input("Departure date in Y-M-D format: ")
-        is_date_valid = validate_date(departure_date)
-        if(is_date_valid):
-            break
-    input_list.append(departure_date)
-    return input_list
+    num_of_req = int(input("Number of reqeust: "))    
+
+    for i in range(num_of_req):
+        input_list = []
+        is_date_valid = False
+        departure = input(f"Departure code for request {i+1}: ").upper()
+        input_list.append(departure)
+        destination = input(f"Destination code for request {i+1}: ").upper()
+        input_list.append(destination)
+        while not is_date_valid:
+            departure_date = input(f"Departure date in Y-M-D format for request {i+1}: ")
+            is_date_valid = validate_date(departure_date)
+            if(is_date_valid):
+                break
+        input_list.append(departure_date)
+        return_list.append(input_list)
+    return return_list
 
 
 def validate_date(input_date):
@@ -94,53 +99,55 @@ def validate_date(input_date):
 def main():
 
     # get input from user
-    input_response = input_request()    
+    input_response = input_request()
+    print(input_response)
 
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    for k in range(len(input_response)):
+        driver = webdriver.Chrome(ChromeDriverManager().install())
 
-    # URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
+        # URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
 
-    format_url = 'https://www.airasia.com/select/en/gb/' + \
-        input_response[0]+'/'+input_response[1]+'/' + \
-        input_response[2]+'/N/1/0/0/O/N/MYR/ST'
+        format_url = 'https://www.airasia.com/select/en/gb/' + \
+            input_response[k][0]+'/'+input_response[k][1]+'/' + \
+            input_response[k][2]+'/N/1/0/0/O/N/MYR/ST'
 
-    driver.get(format_url)
+        driver.get(format_url)
 
-    # execute script to scroll down the page
-    driver.execute_script(
-        "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-    # sleep for 30s
-    time.sleep(10)
+        # execute script to scroll down the page
+        driver.execute_script(
+            "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+        # sleep for 30s
+        time.sleep(10)
 
-    # ticket price list
-    price_elements = []
-    departure_time_list = []
-    departure_time_map_price = {}    
-    count = 0
+        # ticket price list
+        price_elements = []
+        departure_time_list = []
+        departure_time_map_price = {}    
+        count = 0
 
-    departure_time_map_price["Request On"] = get_current_date()    
-    departure_time_map_price["Departure - Destination"] = input_response[0] + ' - ' + input_response[1]
-    departure_time_map_price["Departure Date"] = input_response[2]
+        departure_time_map_price["Request On"] = get_current_date()    
+        departure_time_map_price["Departure - Destination"] = input_response[k][0] + ' - ' + input_response[k][1]
+        departure_time_map_price["Departure Date"] = input_response[k][2]
 
-    content_wrapper = driver.find_elements_by_class_name('section-content')
+        content_wrapper = driver.find_elements_by_class_name('section-content')
 
-    for content in content_wrapper:
-        amount = content.find_element_by_class_name('fare-amount')
-        price_elements.append(amount.text)
-        departure_time = driver.find_elements_by_id(
-            'departing-time-desc-0-'+str(count))
-        departure_time_list.append(departure_time[0].text)
-        count += 1
-        price_list = list()
-        price_list.append(departure_time[0].text + " - " + " RM "+amount.text)
-        departure_time_map_price["Slot "+str(count)] = price_list[0]
+        for content in content_wrapper:
+            amount = content.find_element_by_class_name('fare-amount')
+            price_elements.append(amount.text)
+            departure_time = driver.find_elements_by_id(
+                'departing-time-desc-0-'+str(count))
+            departure_time_list.append(departure_time[0].text)
+            count += 1
+            price_list = list()
+            price_list.append(departure_time[0].text + " - " + " RM "+amount.text)
+            departure_time_map_price["Slot "+str(count)] = price_list[0]
 
-    driver.quit()
+        driver.quit()
 
-    if not price_elements:
-        print("Requested URL is invalid. Please check.")
-    else:
-        write_to_csv(departure_time_map_price)
+        if not price_elements:
+            print("Requested URL is invalid. Please check.")
+        else:
+            write_to_csv(departure_time_map_price)
 
     # print(departure_time_map_price)
 
