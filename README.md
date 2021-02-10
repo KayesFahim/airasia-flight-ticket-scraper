@@ -6,7 +6,9 @@ A terminal based program written in Python for web scraping against [AirAsia](ht
 
 Python 3.8.2, selenium, pandas, BeautifulSoup, ChromeDriverManager
 
-## Activating a virtual environment
+## Running the application:
+
+- Activating the virtual environment
 
 - On macOS and Linux:
 
@@ -18,4 +20,10 @@ source env/bin/activate
 
 ```
 .\env\Scripts\activate
+```
+
+- Execute script
+
+```
+python3 scraper.py
 ```
