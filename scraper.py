@@ -31,7 +31,7 @@ def write_to_csv(ticket_price_dict):
         fields_name.append("Slot "+str(i+1))
 
     try:
-        if os.path.isfile('Tickets.csv') is False:            
+        if os.path.isfile(file_name) is False:
             init_set = {
                 fields_name[0]: "",
                 fields_name[1]: "",
@@ -48,7 +48,7 @@ def write_to_csv(ticket_price_dict):
             for keys, values in ticket_price_dict.items():
                 departure_time_key.append(keys)
                 price_values.append(values[0])
-            with open(filename, 'a+', newline='') as write_obj:
+            with open(file_name, 'a+', newline='') as write_obj:
                 dict_writer = DictWriter(write_obj, fieldnames=fields_name)
                 dict_writer.writerow(ticket_price_dict)
                 print('CSV file created.')
@@ -95,12 +95,12 @@ def validate_date(input_date):
     else:
         return True
 
-
+# program start here
 def main():
 
     # get input from user
     input_response = input_request()
-    print(input_response)
+    # print(input_response)
 
     for k in range(len(input_response)):
         driver = webdriver.Chrome(ChromeDriverManager().install())

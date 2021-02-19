@@ -10,16 +10,22 @@ Python 3.8.2, selenium, pandas, BeautifulSoup, ChromeDriverManager
 
 - Activating the virtual environment
 
-- On macOS and Linux:
+  - on macOS or Linux:
+
+  ```
+    source env/bin/activate
+  ```
+
+  - On Windows
+
+  ```
+    .\env\Scripts\activate
+  ```
+
+- Install dependencies
 
 ```
-source env/bin/activate
-```
-
-- On Windows
-
-```
-.\env\Scripts\activate
+pip3 install requirements.txt
 ```
 
 - Execute script
