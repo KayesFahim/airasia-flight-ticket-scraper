@@ -1,14 +1,13 @@
-from selenium.webdriver import Chrome
 import pandas as pd
-from bs4 import BeautifulSoup
 import time
 import csv
-from csv import DictWriter
 import os
-from datetime import datetime, timedelta
 from selenium import webdriver
+from selenium.webdriver import Chrome
 from webdriver_manager.chrome import ChromeDriverManager
-
+from bs4 import BeautifulSoup
+from csv import DictWriter
+from datetime import datetime, timedelta
 
 def get_current_date():
     now = datetime.now()
@@ -102,9 +101,9 @@ def main():
     input_response = input_request()
     # print(input_response)
 
-    for k in range(len(input_response)):
-        driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver = webdriver.Chrome(ChromeDriverManager().install())
 
+    for k in range(len(input_response)):
         # URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
 
         format_url = 'https://www.airasia.com/select/en/gb/' + \
@@ -139,15 +138,15 @@ def main():
             departure_time_list.append(departure_time[0].text)
             count += 1
             price_list = list()
-            price_list.append(departure_time[0].text + " - " + " RM "+amount.text)
+            price_list.append(departure_time[0].text + " (" + " RM "+amount.text + " )")
             departure_time_map_price["Slot "+str(count)] = price_list[0]
-
-        driver.quit()
 
         if not price_elements:
             print("Requested URL is invalid. Please check.")
         else:
             write_to_csv(departure_time_map_price)
+    
+    driver.quit()
 
     # print(departure_time_map_price)
 
