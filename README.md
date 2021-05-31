@@ -8,7 +8,19 @@ Python 3.8.2, selenium, pandas, BeautifulSoup, ChromeDriverManager
 
 ## Running the application:
 
-- Activating the virtual environment
+- Install dependencies
+
+```
+pip3 install -r requirements.txt
+```
+
+- Execute script
+
+```
+python3 scraper.py
+```
+
+- Activating the virtual environment (if you are using venv)
 
   - on macOS or Linux:
 
@@ -21,15 +33,3 @@ Python 3.8.2, selenium, pandas, BeautifulSoup, ChromeDriverManager
   ```
     .\env\Scripts\activate
   ```
-
-- Install dependencies
-
-```
-pip3 install requirements.txt
-```
-
-- Execute script
-
-```
-python3 scraper.py
-```
