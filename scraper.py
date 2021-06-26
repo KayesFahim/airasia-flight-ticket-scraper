@@ -105,7 +105,7 @@ def main():
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
 
-    driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
     for k in range(len(input_response)):
         # URL = 'https://www.airasia.com/select/en/gb/JHB/PEN/2020-04-30/N/1/0/0/O/N/MYR/ST'
