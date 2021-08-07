@@ -66,7 +66,7 @@ def write_to_csv(ticket_price_dict):
 def input_request():    
     return_list = []    
 
-    num_of_req = int(input("Number of reqeust: "))    
+    num_of_req = int(input("Number of requests: "))    
 
     for i in range(num_of_req):
         input_list = []
@@ -98,10 +98,8 @@ def validate_date(input_date):
 def main():
 
     # get input from user
-    input_response = input_request()
-    # print(input_response)
-
-    # driver = webdriver.Chrome(ChromeDriverManager().install())
+    input_response = input_request()    
+    
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
 
@@ -134,25 +132,26 @@ def main():
 
         content_wrapper = driver.find_elements_by_class_name('section-content')
 
-        for content in content_wrapper:
-            amount = content.find_element_by_class_name('fare-amount')
-            price_elements.append(amount.text)
-            departure_time = driver.find_elements_by_id(
-                'departing-time-desc-0-'+str(count))
-            departure_time_list.append(departure_time[0].text)
-            count += 1
-            price_list = list()
-            price_list.append(departure_time[0].text + " (" + " RM "+amount.text + " )")
-            departure_time_map_price["Slot "+str(count)] = price_list[0]
-
-        if not price_elements:
-            print("Requested URL is invalid. Please check.")
-        else:
-            write_to_csv(departure_time_map_price)
+        try:
+            for content in content_wrapper:
+                amount = content.find_element_by_class_name('fare-amount')
+                price_elements.append(amount.text)
+                departure_time = driver.find_elements_by_id(
+                    'departing-time-desc-0-'+str(count))
+                departure_time_list.append(departure_time[0].text)
+                count += 1
+                price_list = list()
+                price_list.append(departure_time[0].text + " (" + " RM "+amount.text + " )")
+                departure_time_map_price["Slot "+str(count)] = price_list[0]
+            if not price_elements:
+                print("Requested URL is invalid. Please check.")
+            else:
+                write_to_csv(departure_time_map_price)
+        except Exception as e:
+            print(f"Flight {input_response[k][0]} - {input_response[k][1]} not available on {input_response[k][2]}")
     
     driver.quit()
 
     # print(departure_time_map_price)
-
 
 main()
