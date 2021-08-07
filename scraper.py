@@ -76,7 +76,7 @@ def input_request():
         destination = input(f"Destination code for request {i+1}: ").upper()
         input_list.append(destination)
         while not is_date_valid:
-            departure_date = input(f"Departure date in Y-M-D format for request {i+1}: ")
+            departure_date = input(f"Departure date in YYYY-MM-DD format for request {i+1}: ")
             is_date_valid = validate_date(departure_date)
             if(is_date_valid):
                 break
